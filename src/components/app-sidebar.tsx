@@ -13,7 +13,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { DatabaseIcon } from "lucide-react"
+import { DatabaseIcon, ReceiptText } from "lucide-react"
 
 const data = {
   user: {
@@ -23,9 +23,14 @@ const data = {
   },
   navMain: [
     {
-      title: "Data Table",
+      title: "Data Inventaris",
       url: "/dashboard/data-table",
       icon: <DatabaseIcon />
+    },
+    {
+      title: "Data ARKAS",
+      url: "/dashboard/arkas",
+      icon: <ReceiptText />
     },
   ],
 }

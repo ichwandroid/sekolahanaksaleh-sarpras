@@ -5,6 +5,7 @@ import { DataTable } from "@/components/data-table"
 import { getColumns, Barang } from "./columns"
 import pb from "@/lib/pocketbase"
 import { AddInventoryDialog } from "./add-inventory-dialog"
+import { ImportCsvDialog } from "@/components/import-csv-dialog"
 
 export default function DataTablePage() {
   const [data, setData] = useState<Barang[]>([])
@@ -41,7 +42,10 @@ export default function DataTablePage() {
             <h1 className="text-2xl font-bold tracking-tight">Data Barang Sarpras</h1>
             <p className="text-muted-foreground mt-1">Kelola data inventaris dan sarana prasarana sekolah.</p>
           </div>
-          <AddInventoryDialog onSuccess={fetchData} />
+          <div className="flex items-center gap-2">
+            <ImportCsvDialog collection="barang" onSuccess={fetchData} />
+            <AddInventoryDialog onSuccess={fetchData} />
+          </div>
         </div>
         
         {loading ? (
