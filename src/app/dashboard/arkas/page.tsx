@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react"
 import { DataTable } from "@/components/data-table"
-import { arkasColumns, Arkas } from "./columns"
+import { getArkasColumns, Arkas } from "./columns"
 import pb from "@/lib/pocketbase"
 import { ImportCsvDialog } from "@/components/import-csv-dialog"
 
@@ -58,7 +58,7 @@ export default function ArkasPage() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <DataTable columns={arkasColumns} data={data} />
+            <DataTable columns={getArkasColumns(fetchData)} data={data} />
           </div>
         )}
       </div>

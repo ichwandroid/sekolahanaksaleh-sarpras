@@ -47,7 +47,7 @@ function normalizeDate(value: string): string {
 }
 
 /** Normalize all fields whose key contains "tanggal" or "date" */
-function normalizeRow(row: PreviewRow): PreviewRow {
+function normalizeRow(row: PreviewRow, collection?: CollectionType): PreviewRow {
   const result: PreviewRow = {}
   for (const key of Object.keys(row)) {
     const val = row[key]
@@ -57,6 +57,16 @@ function normalizeRow(row: PreviewRow): PreviewRow {
       result[key] = val
     }
   }
+
+  // Calculate realisasi if it's arkas and fields are present
+  if (collection === "arkas") {
+    const qty = Number(result["jumlah_barang"] || result["jumlah"] || 0)
+    const price = Number(result["harga_satuan"] || 0)
+    if (!isNaN(qty) && !isNaN(price)) {
+      result["realisasi"] = qty * price
+    }
+  }
+
   return result
 }
 
@@ -118,7 +128,7 @@ export function ImportCsvDialog({ collection, onSuccess }: UploadPageProps) {
 
     for (let i = 0; i < rows.length; i++) {
       try {
-        await pb.collection(collection).create(normalizeRow(rows[i]))
+        await pb.collection(collection).create(normalizeRow(rows[i], collection))
         res.success++
       } catch (err: any) {
         res.failed++

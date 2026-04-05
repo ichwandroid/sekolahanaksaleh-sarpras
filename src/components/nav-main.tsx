@@ -2,54 +2,50 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { LucideIcon } from "lucide-react"
 
 import {
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { LayoutDashboardIcon } from "lucide-react"
 
 export function NavMain({
   items,
+  label,
 }: {
   items: {
     title: string
     url: string
-    icon?: React.ReactNode
+    icon?: LucideIcon
   }[]
+  label?: string
 }) {
   const pathname = usePathname()
-  
-  // Dashboard is active exactly on /dashboard or / (optional)
-  const isDashboardActive = pathname === "/dashboard"
 
   return (
     <SidebarGroup>
-      <SidebarGroupContent className="flex flex-col gap-2">
+      {label && <SidebarGroupLabel>{label}</SidebarGroupLabel>}
+      <SidebarGroupContent>
         <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              tooltip="Dashboard"
-              render={<Link href="/dashboard" />}
-              isActive={isDashboardActive}
-            >
-              <LayoutDashboardIcon />
-              <span>Dashboard</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-        <SidebarMenu>
-          {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton tooltip={item.title} render={<Link href={item.url} />} isActive={pathname === item.url}>
-                {item.icon}
-                <span>{item.title}</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
+          {items.map((item) => {
+            const Icon = item.icon
+            return (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton 
+                  tooltip={item.title} 
+                  render={<Link href={item.url} />} 
+                  isActive={pathname === item.url}
+                >
+                  {Icon && <Icon />}
+                  <span>{item.title}</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            )
+          })}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
