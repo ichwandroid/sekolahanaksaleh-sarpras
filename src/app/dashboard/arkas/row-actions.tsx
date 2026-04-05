@@ -49,7 +49,8 @@ export function RowActions({ arkas, onRefresh }: RowActionsProps) {
     setGenerating(true)
     try {
       const jumlah = arkas.jumlah_barang || 1
-      const tahun = arkas.tanggal ? new Date(arkas.tanggal).getFullYear() : new Date().getFullYear()
+      const tgl_anggaran = (arkas.tanggal ? new Date(arkas.tanggal).getFullYear() : new Date().getFullYear())
+      const tahun = new Date().getFullYear().toString().slice(-2)
       
       const getAbbr = (text: string) => {
         const cleaned = text.replace(/[^a-zA-Z]/g, "").toUpperCase()
@@ -62,7 +63,7 @@ export function RowActions({ arkas, onRefresh }: RowActionsProps) {
       const noBukti = arkas.no_bukti.replace(/[^a-zA-Z0-9]/g, "")
 
       // --- FAIL-SAFE: Cek apakah sudah ada barang dengan pola ini di database barang ---
-      const checkPattern = `${tahun}-${abbr}-${noBukti}-001`
+      const checkPattern = `${tahun}-${abbr}-${noBukti}/${tgl_anggaran}-001`
       const existing = await pb.collection("barang").getList(1, 1, {
         filter: `kode_barang = "${checkPattern}"`,
         $autoCancel: false
@@ -87,7 +88,7 @@ export function RowActions({ arkas, onRefresh }: RowActionsProps) {
       const promises = []
       for (let i = 1; i <= jumlah; i++) {
         const indexStr = String(i).padStart(3, "0")
-        const kodeBarang = `${tahun}-${abbr}-${noBukti}-${indexStr}`
+        const kodeBarang = `${tahun}-${abbr}-${noBukti}/${tgl_anggaran}-${indexStr}`
 
         const data = {
           kode_barang: kodeBarang,
@@ -95,7 +96,6 @@ export function RowActions({ arkas, onRefresh }: RowActionsProps) {
           tanggal_perolehan: new Date().toISOString(),
           harga: arkas.harga_satuan,
           tahun_anggaran: arkas.tanggal,
-          sumber_dana: "ARKAS",
           kondisi: "baik",
           status: "Aktif",
           merk: "-",

@@ -4,8 +4,9 @@ import { useEffect, useState, useCallback } from "react"
 import { DataTable } from "@/components/data-table"
 import { getColumns, Barang } from "./columns"
 import pb from "@/lib/pocketbase"
-import { AddInventoryDialog } from "./add-inventory-dialog"
-import { ImportCsvDialog } from "@/components/import-csv-dialog"
+import { Button } from "@/components/ui/button"
+import { DownloadIcon } from "lucide-react"
+import { utils, writeFile } from "xlsx"
 
 export default function DataTablePage() {
   const [data, setData] = useState<Barang[]>([])
@@ -30,6 +31,14 @@ export default function DataTablePage() {
     }
   }, [])
 
+  const handleExport = () => {
+    if (data.length === 0) return
+    const ws = utils.json_to_sheet(data)
+    const wb = utils.book_new()
+    utils.book_append_sheet(wb, ws, "Inventaris")
+    writeFile(wb, `Inventaris-Sarpras-${new Date().toISOString().split('T')[0]}.xlsx`)
+  }
+
   useEffect(() => {
     fetchData()
   }, [fetchData])
@@ -43,8 +52,10 @@ export default function DataTablePage() {
             <p className="text-muted-foreground mt-1">Kelola data inventaris dan sarana prasarana sekolah.</p>
           </div>
           <div className="flex items-center gap-2">
-            <ImportCsvDialog collection="barang" onSuccess={fetchData} />
-            <AddInventoryDialog onSuccess={fetchData} />
+            <Button variant="outline" onClick={handleExport} disabled={data.length === 0}>
+              <DownloadIcon className="mr-2 h-4 w-4" />
+              Export ke Excel
+            </Button>
           </div>
         </div>
         

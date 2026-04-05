@@ -20,6 +20,7 @@ export type Barang = {
   spesifikasi: string
   qr_link: string
   keterangan: string
+  status_generate?: boolean
 }
 
 export function getColumns(onRefresh: () => void): ColumnDef<Barang>[] {
@@ -53,15 +54,21 @@ export function getColumns(onRefresh: () => void): ColumnDef<Barang>[] {
       }
     },
     {
-      accessorKey: "harga",
-      header: "Harga",
+      accessorKey: "qr_link",
+      header: "QRCode Link",
       cell: ({ row }) => {
-        const amount = parseFloat(row.getValue("harga") ?? "0")
-        const formatted = new Intl.NumberFormat("id-ID", {
-          style: "currency",
-          currency: "IDR",
-        }).format(amount)
-        return <div className="font-medium">{formatted}</div>
+        const kode = row.original.kode_barang
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(kode)}`
+        return (
+          <a 
+            href={qrUrl} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-primary hover:underline text-xs flex items-center gap-1 font-medium"
+          >
+            Lihat QRCode
+          </a>
+        )
       },
     },
     {

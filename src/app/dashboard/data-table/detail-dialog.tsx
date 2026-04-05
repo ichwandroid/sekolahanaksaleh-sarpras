@@ -26,6 +26,21 @@ const kondisiBadge = (kondisi: string) => {
 const formatRupiah = (amount: number) =>
   new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(amount ?? 0)
 
+const formatDate = (dateString?: string | null) => {
+  if (!dateString) return "-"
+  try {
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) return dateString
+    return date.toLocaleDateString("id-ID", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    })
+  } catch (e) {
+    return dateString
+  }
+}
+
 function DetailRow({ label, value }: { label: string; value?: string | number | null }) {
   return (
     <div className="flex justify-between gap-4 py-1.5">
@@ -42,13 +57,19 @@ export function DetailDialog({ barang, open, onOpenChange }: DetailDialogProps) 
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[520px]">
         <DialogHeader>
-          <DialogTitle>{barang.nama_barang}</DialogTitle>
-          <DialogDescription>
-            Kode: <span className="font-mono font-semibold">{barang.kode_barang}</span>
+          <DialogTitle className="text-xl">{barang.nama_barang}</DialogTitle>
+          <DialogDescription className="mt-1.5 flex items-center gap-3">
+            <div className="bg-white p-1 rounded border shadow-xs dark:bg-slate-900 overflow-hidden shrink-0">
+              <img 
+                src={`https://bwipjs-api.metafloor.com/?bcid=code128&text=${encodeURIComponent(barang.kode_barang)}&includetext=false&scale=2&height=4&padding=0`} 
+                alt={barang.kode_barang}
+                className="h-4 w-auto grayscale dark:invert"
+              />
+            </div>
           </DialogDescription>
         </DialogHeader>
 
-        <div className="mt-2 space-y-1">
+        <div className="mt-6 space-y-1">
           <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Informasi Umum</p>
           <Separator />
           <DetailRow label="Nama Barang" value={barang.nama_barang} />
@@ -71,8 +92,8 @@ export function DetailDialog({ barang, open, onOpenChange }: DetailDialogProps) 
           <Separator />
           <DetailRow label="Harga" value={formatRupiah(barang.harga)} />
           <DetailRow label="Sumber Dana" value={barang.sumber_dana} />
-          <DetailRow label="Tahun Anggaran" value={barang.tahun_anggaran} />
-          <DetailRow label="Tanggal Perolehan" value={barang.tanggal_perolehan} />
+          <DetailRow label="Tahun Anggaran" value={formatDate(barang.tahun_anggaran)} />
+          <DetailRow label="Tanggal Perolehan" value={formatDate(barang.tanggal_perolehan)} />
 
           {barang.keterangan && (
             <>
