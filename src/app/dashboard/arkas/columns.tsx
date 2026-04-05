@@ -1,7 +1,9 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
+import { Badge } from "@/components/ui/badge"
 import { RowActions } from "./row-actions"
+import { cn } from "@/lib/utils"
 
 export type Arkas = {
   id: string
@@ -14,6 +16,7 @@ export type Arkas = {
   jumlah_barang: number
   harga_satuan: number
   realisasi: number
+  status_generate?: boolean
 }
 
 const formatRupiah = (value: number) =>
@@ -78,6 +81,25 @@ export function getArkasColumns(onRefresh: () => void): ColumnDef<Arkas>[] {
           {formatRupiah(row.getValue("realisasi"))}
         </div>
       ),
+    },
+    {
+      accessorKey: "status_generate",
+      header: "Status",
+      cell: ({ row }) => {
+        const isGenerated = row.getValue("status_generate") as boolean
+        return (
+          <Badge 
+            variant={isGenerated ? "secondary" : "outline"}
+            className={cn(
+              isGenerated 
+                ? "bg-emerald-500/15 text-emerald-700 border-emerald-500/30 dark:bg-emerald-500/20 dark:text-emerald-400" 
+                : "border-red-500/50 text-red-600 bg-red-500/5 dark:text-red-400"
+            )}
+          >
+            {isGenerated ? "Generate" : "Belum"}
+          </Badge>
+        )
+      },
     },
     {
       id: "actions",

@@ -37,14 +37,14 @@ const data = {
   ],
   navInventaris: [
     {
-      title: "Data Inventaris",
-      url: "/dashboard/data-table",
-      icon: Database,
-    },
-    {
       title: "Data ARKAS",
       url: "/dashboard/arkas",
       icon: ReceiptText,
+    },
+    {
+      title: "Data Inventaris",
+      url: "/dashboard/data-table",
+      icon: Database,
     },
   ],
 }
