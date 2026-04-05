@@ -1,34 +1,37 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { DataTable } from "@/components/data-table"
-import { columns, Barang } from "./columns"
+import { getColumns, Barang } from "./columns"
 import pb from "@/lib/pocketbase"
+import { AddInventoryDialog } from "./add-inventory-dialog"
 
 export default function DataTablePage() {
   const [data, setData] = useState<Barang[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const records = await pb.collection("barang").getFullList<Barang>({
-          sort: '-created',
-        })
-        setData(records)
-      } catch (err: any) {
-        if (!err.isAbort) {
-          console.error(err)
-          setError("Gagal memuat data dari PocketBase. Pastikan PocketBase sedang berjalan dan Collection 'barang' telah dibuat.")
-        }
-      } finally {
-        setLoading(false)
+  const fetchData = useCallback(async () => {
+    setLoading(true)
+    try {
+      const records = await pb.collection("barang").getFullList<Barang>({
+        sort: '-created',
+      })
+      setData(records)
+      setError("")
+    } catch (err: any) {
+      if (!err.isAbort) {
+        console.error(err)
+        setError("Gagal memuat data dari PocketBase. Pastikan PocketBase sedang berjalan dan Collection 'barang' telah dibuat.")
       }
+    } finally {
+      setLoading(false)
     }
-    
-    fetchData()
   }, [])
+
+  useEffect(() => {
+    fetchData()
+  }, [fetchData])
 
   return (
     <div className="@container/main flex flex-1 flex-col gap-2">
@@ -38,6 +41,7 @@ export default function DataTablePage() {
             <h1 className="text-2xl font-bold tracking-tight">Data Barang Sarpras</h1>
             <p className="text-muted-foreground mt-1">Kelola data inventaris dan sarana prasarana sekolah.</p>
           </div>
+          <AddInventoryDialog onSuccess={fetchData} />
         </div>
         
         {loading ? (
@@ -45,7 +49,7 @@ export default function DataTablePage() {
         ) : error ? (
           <div className="p-4 bg-destructive/10 text-destructive rounded-md border border-destructive/20">{error}</div>
         ) : (
-          <DataTable columns={columns} data={data} />
+          <DataTable columns={getColumns(fetchData)} data={data} />
         )}
       </div>
     </div>
