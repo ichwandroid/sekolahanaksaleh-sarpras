@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Dashboard Sarpras SD Anak Saleh
 
-## Getting Started
+Aplikasi Manajemen Sarana dan Prasarana (Sarpras) untuk SD Anak Saleh Malang, dirancang untuk mengintegrasikan data anggaran sekolah (ARKAS) dengan pengelolaan inventaris fisik secara otomatis dan efisien.
 
-First, run the development server:
+## 🚀 Fitur Utama
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### 📊 Manajemen ARKAS (Anggaran Realisasi)
+- **Import Data**: Mendukung unggahan data anggaran dari file CSV/Excel dengan pratinjau sebelum disimpan.
+- **Kalkulasi Otomatis**: Menghitung realisasi dana secara real-time berdasarkan jumlah unit dan harga satuan.
+- **Status Pelacakan**: Mengetahui item anggaran mana yang sudah diproses menjadi barang inventaris.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 📦 Pengelolaan Inventaris Pintar
+- **Smart Generation**: Membuat data inventaris otomatis dari nota belanja ARKAS dengan satu klik.
+- **Format Kode Unit**: Penomoran aset otomatis dengan format cerdas `[TAHUN]-[ABBR]-[NOBUKTI]/[ANGGARAN]-[URUT]`.
+- **Barcode Labelling**: Generasi Barcode (Code 128) dinamis untuk setiap item barang guna memudahkan pelabelan fisik.
+- **Reporting**: Ekspor seluruh daftar inventaris ke format Excel (.xlsx) untuk kebutuhan audit dan pelaporan bulanan.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 🎨 User Experience (UX)
+- **Modern UI**: Menggunakan Next.js 16, Tailwind CSS, dan Shadcn UI untuk antarmuka yang bersih dan responsif.
+- **Dark/Light Mode**: Mendukung tema gelap dan terang untuk kenyamanan operasional.
+- **Integrasi Backend**: Menggunakan PocketBase sebagai database realtime yang ringan dan cepat.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Persyaratan Sistem
 
-## Learn More
+- **Node.js**: Versi 18 atau lebih tinggi.
+- **PocketBase**: Server database aktif dengan koleksi `barang` dan `arkas`.
 
-To learn more about Next.js, take a look at the following resources:
+## 📦 Instalasi & Menjalankan
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Clone repositori ini.
+2. Instal dependensi:
+   ```bash
+   npm install
+   ```
+3. Jalankan server pengembangan:
+   ```bash
+   npm run dev
+   ```
+4. Buka [http://localhost:3000](http://localhost:3000) di browser Anda.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📝 Konfigurasi Database (PocketBase)
 
-## Deploy on Vercel
+Pastikan koleksi berikut tersedia di PocketBase Anda:
+- **barang**: Untuk menyimpan data inventaris (Kode Barang, Nama, Lokasi, Harga, dll).
+- **arkas**: Untuk menyimpan data anggaran (Tanggal, Uraian, Jumlah, Harga Satuan, status_generate, dll).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+© 2026 Sarpras SD Anak Saleh - Built with ❤️ for Education.
