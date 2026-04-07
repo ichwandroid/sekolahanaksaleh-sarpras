@@ -22,7 +22,7 @@ const formatRupiah = (amount: number) =>
 function DetailRow({ label, value }: { label: string; value?: string | number | null }) {
   return (
     <div className="flex justify-between gap-4 py-1.5">
-      <span className="text-sm text-muted-foreground min-w-[140px]">{label}</span>
+      <span className="text-sm text-muted-foreground min-w-35">{label}</span>
       <span className="text-sm font-medium text-right">{value ?? "-"}</span>
     </div>
   )
@@ -33,7 +33,7 @@ export function DetailDialog({ arkas, open, onOpenChange }: DetailDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[520px]">
+      <DialogContent className="sm:max-w-130">
         <DialogHeader>
           <DialogTitle>Detail ARKAS</DialogTitle>
           <DialogDescription>

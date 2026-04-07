@@ -1,5 +1,7 @@
 "use client"
 
+import Image from "next/image"
+
 import {
   Dialog,
   DialogContent,
@@ -9,7 +11,7 @@ import {
 } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { Barang } from "./columns"
+import { Barang, getBarangNoBukti } from "./columns"
 
 interface DetailDialogProps {
   barang: Barang | null
@@ -36,7 +38,7 @@ const formatDate = (dateString?: string | null) => {
       month: "long",
       year: "numeric",
     })
-  } catch (e) {
+  } catch {
     return dateString
   }
 }
@@ -58,22 +60,30 @@ export function DetailDialog({ barang, open, onOpenChange }: DetailDialogProps) 
       <DialogContent className="sm:max-w-[520px]">
         <DialogHeader>
           <DialogTitle className="text-xl">{barang.nama_barang}</DialogTitle>
-          <DialogDescription className="mt-1.5 flex items-center gap-3">
-            <div className="bg-white p-1 rounded border shadow-xs dark:bg-slate-900 overflow-hidden shrink-0">
-              <img 
-                src={`https://bwipjs-api.metafloor.com/?bcid=code128&text=${encodeURIComponent(barang.kode_barang)}&includetext=false&scale=2&height=4&padding=0`} 
-                alt={barang.kode_barang}
-                className="h-4 w-auto grayscale dark:invert"
-              />
-            </div>
+          <DialogDescription className="mt-1.5">
+            Kode barang: <span className="font-mono font-semibold text-foreground">{barang.kode_barang}</span>
           </DialogDescription>
         </DialogHeader>
+
+        <div className="mt-2">
+          <div className="inline-flex bg-white p-1 rounded border shadow-xs dark:bg-slate-900 overflow-hidden shrink-0">
+            <Image
+              src={`https://bwipjs-api.metafloor.com/?bcid=code128&text=${encodeURIComponent(barang.kode_barang)}&includetext=false&scale=2&height=4&padding=0`}
+              alt={barang.kode_barang}
+              width={118}
+              height={16}
+              unoptimized
+              className="h-4 w-auto grayscale dark:invert"
+            />
+          </div>
+        </div>
 
         <div className="mt-6 space-y-1">
           <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Informasi Umum</p>
           <Separator />
           <DetailRow label="Nama Barang" value={barang.nama_barang} />
           <DetailRow label="Kode Barang" value={barang.kode_barang} />
+          <DetailRow label="No. Bukti" value={getBarangNoBukti(barang)} />
           <DetailRow label="Merk / Brand" value={barang.merk} />
           <DetailRow label="Spesifikasi" value={barang.spesifikasi} />
 

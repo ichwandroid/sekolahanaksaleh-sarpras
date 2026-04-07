@@ -1,12 +1,19 @@
-import PocketBase from 'pocketbase';
+import PocketBase from "pocketbase"
 
-// URL PocketBase, default diarahkan ke localhost port 8090 (port standar bawaan PocketBase)
-const POCKETBASE_URL = process.env.NEXT_PUBLIC_POCKETBASE_URL || 'http://127.0.0.1:8090';
+const resolvePocketBaseUrl = () => {
+  if (process.env.NEXT_PUBLIC_POCKETBASE_URL) {
+    return process.env.NEXT_PUBLIC_POCKETBASE_URL
+  }
 
-// Buat instance PocketBase tunggal
-const pb = new PocketBase(POCKETBASE_URL);
+  if (typeof window !== "undefined") {
+    return `http://${window.location.hostname}:8090`
+  }
 
-// Konfigurasi opsional: Nonaktifkan pembatalan otomatis untuk permintaan ganda yang terjadi secara cepat
-pb.autoCancellation(false);
+  return "http://127.0.0.1:8090"
+}
 
-export default pb;
+const pb = new PocketBase(resolvePocketBaseUrl())
+
+pb.autoCancellation(false)
+
+export default pb

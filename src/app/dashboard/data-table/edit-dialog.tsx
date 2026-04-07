@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/select"
 import pb from "@/lib/pocketbase"
 import { toast } from "sonner"
-import { Barang } from "./columns"
+import { Barang, getBarangNoBukti } from "./columns"
 
 interface EditDialogProps {
   barang: Barang | null
@@ -48,6 +48,7 @@ export function EditDialog({ barang, open, onOpenChange, onSuccess }: EditDialog
       const formData = new FormData(e.currentTarget)
       const data = {
         kode_barang: formData.get("kode_barang") as string,
+        no_bukti: formData.get("no_bukti") as string,
         nama_barang: formData.get("nama_barang") as string,
         merk: formData.get("merk") as string,
         lokasi: formData.get("lokasi") as string,
@@ -65,9 +66,9 @@ export function EditDialog({ barang, open, onOpenChange, onSuccess }: EditDialog
       toast.success("Berhasil", { description: "Data barang berhasil diperbarui." })
       onOpenChange(false)
       onSuccess()
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error)
-      toast.error("Gagal", { description: error.message || "Gagal memperbarui data barang." })
+      toast.error("Gagal", { description: error instanceof Error ? error.message : "Gagal memperbarui data barang." })
     } finally {
       setLoading(false)
     }
@@ -92,6 +93,13 @@ export function EditDialog({ barang, open, onOpenChange, onSuccess }: EditDialog
                 <Input id="edit_kode_barang" name="kode_barang" defaultValue={barang.kode_barang} required />
               </div>
               <div className="space-y-2">
+                <Label htmlFor="edit_no_bukti">No. Bukti</Label>
+                <Input id="edit_no_bukti" name="no_bukti" defaultValue={getBarangNoBukti(barang)} />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2 col-span-2">
                 <Label htmlFor="edit_nama_barang">Nama Barang</Label>
                 <Input id="edit_nama_barang" name="nama_barang" defaultValue={barang.nama_barang} required />
               </div>

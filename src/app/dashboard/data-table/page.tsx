@@ -21,8 +21,14 @@ export default function DataTablePage() {
       })
       setData(records)
       setError("")
-    } catch (err: any) {
-      if (!err.isAbort) {
+    } catch (err: unknown) {
+      const isAbortError = (value: unknown): value is { isAbort: boolean } =>
+        typeof value === "object" &&
+        value !== null &&
+        "isAbort" in value &&
+        (value as { isAbort: unknown }).isAbort === true
+
+      if (!isAbortError(err)) {
         console.error(err)
         setError("Gagal memuat data dari PocketBase. Pastikan PocketBase sedang berjalan dan Collection 'barang' telah dibuat.")
       }

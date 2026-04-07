@@ -34,6 +34,7 @@ export function AddInventoryDialog({ onSuccess }: AddInventoryDialogProps) {
       const formData = new FormData(e.currentTarget)
       const data = {
         kode_barang: formData.get("kode_barang") as string,
+        no_bukti: formData.get("no_bukti") as string,
         nama_barang: formData.get("nama_barang") as string,
         merk: formData.get("merk") as string,
         lokasi: formData.get("lokasi") as string,
@@ -48,9 +49,9 @@ export function AddInventoryDialog({ onSuccess }: AddInventoryDialogProps) {
       toast.success("Berhasil", { description: "Data barang berhasil ditambahkan." })
       setOpen(false)
       onSuccess()
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error)
-      toast.error("Gagal", { description: error.message || "Gagal menambahkan data barang." })
+      toast.error("Gagal", { description: error instanceof Error ? error.message : "Gagal menambahkan data barang." })
     } finally {
       setLoading(false)
     }
@@ -81,11 +82,18 @@ export function AddInventoryDialog({ onSuccess }: AddInventoryDialogProps) {
                 <Input id="kode_barang" name="kode_barang" placeholder="Contoh: BRG-001" required />
               </div>
               <div className="space-y-2">
+                <Label htmlFor="no_bukti">No. Bukti</Label>
+                <Input id="no_bukti" name="no_bukti" placeholder="Contoh: BKT-001" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2 col-span-2">
                 <Label htmlFor="nama_barang">Nama Barang</Label>
                 <Input id="nama_barang" name="nama_barang" placeholder="Contoh: Meja Guru" required />
               </div>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="merk">Merk / Brand</Label>

@@ -1,5 +1,7 @@
 "use client"
 
+import Link from "next/link"
+
 import {
   Avatar,
   AvatarFallback,
@@ -20,7 +22,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { EllipsisVerticalIcon, CircleUserRoundIcon, CreditCardIcon, BellIcon, LogOutIcon } from "lucide-react"
+import { EllipsisVerticalIcon, QrCodeIcon, LogOutIcon } from "lucide-react"
 
 export function NavUser({
   user,
@@ -77,20 +79,13 @@ export function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <CircleUserRoundIcon
-                />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCardIcon
-                />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <BellIcon
-                />
-                Notifications
+              <DropdownMenuItem
+                render={
+                  <Link href="/dashboard/qr-scanner" />
+                }
+              >
+                <QrCodeIcon />
+                Scan QR Inventaris
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

@@ -7,6 +7,7 @@ import { RowActions } from "./row-actions"
 export type Barang = {
   id: string
   kode_barang: string
+  no_bukti?: string
   nama_barang: string
   tanggal_perolehan: string
   harga: number
@@ -23,6 +24,15 @@ export type Barang = {
   status_generate?: boolean
 }
 
+export function getBarangNoBukti(barang: Barang) {
+  if (barang.no_bukti) {
+    return barang.no_bukti
+  }
+
+  const match = barang.keterangan?.match(/No Bukti:\s*(.+)$/i)
+  return match?.[1]?.trim() || ""
+}
+
 export function getColumns(onRefresh: () => void): ColumnDef<Barang>[] {
   return [
     {
@@ -32,6 +42,11 @@ export function getColumns(onRefresh: () => void): ColumnDef<Barang>[] {
     {
       accessorKey: "nama_barang",
       header: "Nama Barang",
+    },
+    {
+      accessorKey: "no_bukti",
+      header: "No. Bukti",
+      cell: ({ row }) => getBarangNoBukti(row.original) || "-",
     },
     {
       accessorKey: "merk",

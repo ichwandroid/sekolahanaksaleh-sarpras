@@ -46,8 +46,13 @@ export function RowActions({ barang, onRefresh }: RowActionsProps) {
       toast.success("Berhasil", { description: `"${barang.nama_barang}" berhasil dihapus.` })
       setDeleteOpen(false)
       onRefresh()
-    } catch (error: any) {
-      toast.error("Gagal", { description: error.message || "Gagal menghapus data barang." })
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Gagal menghapus data barang."
+
+      toast.error("Gagal", { description: errorMessage })
     } finally {
       setDeleting(false)
     }
@@ -108,12 +113,12 @@ export function RowActions({ barang, onRefresh }: RowActionsProps) {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
-        <DialogContent className="sm:max-w-[400px]">
+        <DialogContent className="sm:max-w-100">
           <DialogHeader>
             <DialogTitle>Hapus Barang</DialogTitle>
             <DialogDescription>
               Apakah kamu yakin ingin menghapus{" "}
-              <span className="font-semibold text-foreground">"{barang.nama_barang}"</span>?
+              <span className="font-semibold text-foreground">&quot;{barang.nama_barang}&quot;</span>?
               Tindakan ini tidak dapat dibatalkan.
             </DialogDescription>
           </DialogHeader>

@@ -78,7 +78,7 @@ export function RowActions({ arkas, onRefresh }: RowActionsProps) {
         try {
           await pb.collection("arkas").update(arkas.id, { status_generate: true })
           onRefresh()
-        } catch (e) {}
+        } catch {}
         
         setGenerating(false)
         return
@@ -92,6 +92,7 @@ export function RowActions({ arkas, onRefresh }: RowActionsProps) {
 
         const data = {
           kode_barang: kodeBarang,
+          no_bukti: arkas.no_bukti,
           nama_barang: arkas.uraian,
           tanggal_perolehan: new Date().toISOString(),
           harga: arkas.harga_satuan,
@@ -112,18 +113,18 @@ export function RowActions({ arkas, onRefresh }: RowActionsProps) {
         await pb.collection("arkas").update(arkas.id, {
           status_generate: true
         })
-      } catch (updateErr: any) {
+      } catch (updateErr: unknown) {
         console.warn("Update status_generate failed.", updateErr)
       }
 
       onRefresh()
 
-      toast.success("Berhasil", { 
-        description: `${jumlah} data inventaris baru telah di-generate.` 
+      toast.success("Berhasil", {
+        description: `${jumlah} data inventaris baru telah di-generate.`
       })
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error)
-      toast.error("Gagal", { description: error.message || "Gagal generate inventaris." })
+      toast.error("Gagal", { description: error instanceof Error ? error.message : "Gagal generate inventaris." })
     } finally {
       setGenerating(false)
     }
@@ -136,8 +137,8 @@ export function RowActions({ arkas, onRefresh }: RowActionsProps) {
       toast.success("Berhasil", { description: `Data ARKAS berhasil dihapus.` })
       setDeleteOpen(false)
       onRefresh()
-    } catch (error: any) {
-      toast.error("Gagal", { description: error.message || "Gagal menghapus data ARKAS." })
+    } catch (error: unknown) {
+      toast.error("Gagal", { description: error instanceof Error ? error.message : "Gagal menghapus data ARKAS." })
     } finally {
       setDeleting(false)
     }
@@ -205,7 +206,7 @@ export function RowActions({ arkas, onRefresh }: RowActionsProps) {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
-        <DialogContent className="sm:max-w-[400px]">
+        <DialogContent className="sm:max-w-100">
           <DialogHeader>
             <DialogTitle>Hapus Data ARKAS</DialogTitle>
             <DialogDescription>
