@@ -78,7 +78,7 @@ export function EditDialog({ barang, open, onOpenChange, onSuccess }: EditDialog
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[560px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-140 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Edit Inventaris</DialogTitle>
           <DialogDescription>

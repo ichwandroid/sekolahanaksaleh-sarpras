@@ -67,7 +67,7 @@ export function AddInventoryDialog({ onSuccess }: AddInventoryDialogProps) {
           </Button>
         }
       />
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-125">
         <DialogHeader>
           <DialogTitle>Tambah Inventaris Baru</DialogTitle>
           <DialogDescription>

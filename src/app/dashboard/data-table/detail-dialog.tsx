@@ -46,7 +46,7 @@ const formatDate = (dateString?: string | null) => {
 function DetailRow({ label, value }: { label: string; value?: string | number | null }) {
   return (
     <div className="flex justify-between gap-4 py-1.5">
-      <span className="text-sm text-muted-foreground min-w-[140px]">{label}</span>
+      <span className="text-sm text-muted-foreground min-w-35">{label}</span>
       <span className="text-sm font-medium text-right">{value ?? "-"}</span>
     </div>
   )
@@ -57,7 +57,7 @@ export function DetailDialog({ barang, open, onOpenChange }: DetailDialogProps) 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[520px]">
+      <DialogContent className="sm:max-w-130">
         <DialogHeader>
           <DialogTitle className="text-xl">{barang.nama_barang}</DialogTitle>
           <DialogDescription className="mt-1.5">
@@ -91,7 +91,7 @@ export function DetailDialog({ barang, open, onOpenChange }: DetailDialogProps) 
           <Separator />
           <DetailRow label="Lokasi" value={barang.lokasi} />
           <div className="flex justify-between gap-4 py-1.5">
-            <span className="text-sm text-muted-foreground min-w-[140px]">Kondisi</span>
+            <span className="text-sm text-muted-foreground min-w-35">Kondisi</span>
             <Badge variant={kondisiBadge(barang.kondisi)}>
               {barang.kondisi ? barang.kondisi.toUpperCase() : "N/A"}
             </Badge>

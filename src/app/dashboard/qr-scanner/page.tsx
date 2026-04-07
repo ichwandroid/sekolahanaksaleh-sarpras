@@ -89,7 +89,7 @@ const normalizeScannedValue = (rawValue: string) => {
 function DetailRow({ label, value }: { label: string; value?: string | number | null }) {
   return (
     <div className="flex justify-between gap-4 py-2">
-      <span className="min-w-[140px] text-sm text-muted-foreground">{label}</span>
+      <span className="min-w-35 text-sm text-muted-foreground">{label}</span>
       <span className="text-right text-sm font-medium">{value ?? "-"}</span>
     </div>
   )
