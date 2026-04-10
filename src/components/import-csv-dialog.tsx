@@ -154,7 +154,7 @@ export function ImportCsvDialog({ collection, onSuccess }: UploadPageProps) {
     <>
       <Button variant="outline" onClick={() => setOpen(true)}>
         <Upload className="mr-2 h-4 w-4" />
-        Import CSV / Excel
+        Import Data
       </Button>
 
       <Dialog open={open} onOpenChange={(v) => { if (!v) handleClose() }}>
@@ -162,9 +162,7 @@ export function ImportCsvDialog({ collection, onSuccess }: UploadPageProps) {
           <DialogHeader>
             <DialogTitle>Import Data dari File</DialogTitle>
             <DialogDescription>
-              Upload file <span className="font-semibold">.csv</span> atau{" "}
-              <span className="font-semibold">.xlsx / .xls</span>. Header kolom harus sesuai
-              dengan nama field di database.
+              Unggah file .csv, .xlsx, atau .xls dengan header kolom sesuai database.
             </DialogDescription>
           </DialogHeader>
 
@@ -183,7 +181,7 @@ export function ImportCsvDialog({ collection, onSuccess }: UploadPageProps) {
               >
                 <FileSpreadsheet className="h-12 w-12 text-muted-foreground" />
                 <div className="text-center">
-                  <p className="font-medium">Klik atau drag & drop file di sini</p>
+                  <p className="font-medium">Tarik file ke sini atau klik untuk memilih</p>
                   <p className="text-sm text-muted-foreground mt-1">Mendukung .csv, .xlsx, .xls</p>
                 </div>
                 <input
@@ -198,53 +196,56 @@ export function ImportCsvDialog({ collection, onSuccess }: UploadPageProps) {
 
             {/* File info + preview */}
             {file && !result && (
-              <div className="space-y-3">
-                <div className="flex items-center justify-between bg-muted/50 rounded-lg px-4 py-2.5">
-                  <div className="flex items-center gap-2 text-sm font-medium">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between bg-muted rounded-lg px-3 py-2">
+                  <div className="flex items-center gap-2 text-sm">
                     <FileSpreadsheet className="h-4 w-4 text-primary" />
-                    <span>{file.name}</span>
-                    <span className="text-muted-foreground font-normal">
-                      — {rows.length} baris data ditemukan
-                    </span>
+                    <span className="font-medium">{file.name}</span>
+                    <span className="text-muted-foreground text-xs">({rows.length} baris)</span>
                   </div>
-                  <button onClick={reset} className="text-muted-foreground hover:text-destructive transition-colors">
+                  <button onClick={reset} className="text-muted-foreground hover:text-destructive" aria-label="Reset">
                     <X className="h-4 w-4" />
                   </button>
                 </div>
 
-                {/* Preview table */}
-                <div className="border rounded-lg overflow-auto max-h-64">
-                  <table className="w-full text-xs">
-                    <thead className="bg-muted sticky top-0">
-                      <tr>
-                        <th className="px-3 py-2 text-left text-muted-foreground font-medium">#</th>
-                        {headers.map((h) => (
-                          <th key={h} className="px-3 py-2 text-left text-muted-foreground font-medium whitespace-nowrap">
-                            {h}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {rows.slice(0, 10).map((row, i) => (
-                        <tr key={i} className="border-t odd:bg-muted/20">
-                          <td className="px-3 py-1.5 text-muted-foreground">{i + 1}</td>
-                          {headers.map((h) => (
-                            <td key={h} className="px-3 py-1.5 whitespace-nowrap max-w-[160px] truncate">
-                              {String(row[h] ?? "")}
-                            </td>
+                {/* Preview table - hanya kolom penting */}
+                <div className="border rounded-lg overflow-hidden max-h-48">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-xs border-collapse">
+                      <thead className="bg-muted sticky top-0">
+                        <tr>
+                          <th className="px-2 py-2 text-left font-medium text-muted-foreground">#</th>
+                          {headers.slice(0, 5).map((h) => (
+                            <th key={h} className="px-2 py-2 text-left font-medium text-muted-foreground whitespace-nowrap border-l">
+                              {h}
+                            </th>
                           ))}
+                          {headers.length > 5 && (
+                            <th className="px-2 py-2 text-left font-medium text-muted-foreground border-l text-xs">+{headers.length - 5} kolom</th>
+                          )}
                         </tr>
-                      ))}
-                      {rows.length > 10 && (
-                        <tr className="border-t">
-                          <td colSpan={headers.length + 1} className="px-3 py-2 text-center text-muted-foreground text-xs">
-                            ... dan {rows.length - 10} baris lainnya
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody className="divide-y">
+                        {rows.slice(0, 8).map((row, i) => (
+                          <tr key={i} className="hover:bg-muted/40">
+                            <td className="px-2 py-1.5 text-muted-foreground text-xs font-medium">{i + 1}</td>
+                            {headers.slice(0, 5).map((h) => (
+                              <td key={h} className="px-2 py-1.5 truncate max-w-[120px] border-l text-xs">
+                                {String(row[h] ?? "-").slice(0, 30)}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                        {rows.length > 8 && (
+                          <tr className="bg-muted/20">
+                            <td colSpan={Math.min(6, headers.length + 1)} className="px-2 py-2 text-center text-xs text-muted-foreground">
+                              ... {rows.length - 8} baris lainnya
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             )}
@@ -252,30 +253,37 @@ export function ImportCsvDialog({ collection, onSuccess }: UploadPageProps) {
             {/* Result */}
             {result && (
               <div className="space-y-3">
-                <div className={`flex items-center gap-3 rounded-lg p-4 ${result.failed === 0 ? "bg-green-500/10 text-green-700 dark:text-green-400" : "bg-yellow-500/10 text-yellow-700 dark:text-yellow-400"}`}>
+                <div className={`flex items-center gap-3 rounded-lg p-3 ${
+                  result.failed === 0 
+                    ? "bg-green-500/10 text-green-700 dark:text-green-400" 
+                    : "bg-yellow-500/10 text-yellow-700 dark:text-yellow-400"
+                }`}>
                   {result.failed === 0
-                    ? <CheckCircle2 className="h-5 w-5 shrink-0" />
-                    : <AlertCircle className="h-5 w-5 shrink-0" />
+                    ? <CheckCircle2 className="h-4 w-4 shrink-0" />
+                    : <AlertCircle className="h-4 w-4 shrink-0" />
                   }
                   <div className="text-sm">
-                    <p className="font-semibold">
-                      {result.success} baris berhasil diimpor
-                      {result.failed > 0 && `, ${result.failed} baris gagal`}
+                    <p className="font-medium">
+                      {result.success} baris berhasil
+                      {result.failed > 0 && ` · ${result.failed} gagal`}
                     </p>
                   </div>
                 </div>
                 {result.errors.length > 0 && (
-                  <div className="bg-destructive/5 border border-destructive/20 rounded-lg p-3 max-h-40 overflow-auto space-y-1">
-                    {result.errors.map((e, i) => (
+                  <div className="bg-destructive/5 border border-destructive/20 rounded-lg p-2.5 max-h-32 overflow-y-auto space-y-0.5">
+                    {result.errors.slice(0, 5).map((e, i) => (
                       <p key={i} className="text-xs text-destructive">{e}</p>
                     ))}
+                    {result.errors.length > 5 && (
+                      <p className="text-xs text-muted-foreground italic">... dan {result.errors.length - 5} error lainnya</p>
+                    )}
                   </div>
                 )}
               </div>
             )}
           </div>
 
-          <DialogFooter>
+          <DialogFooter className="gap-2">
             {!result ? (
               <>
                 <Button variant="outline" onClick={handleClose} disabled={uploading}>
@@ -286,14 +294,16 @@ export function ImportCsvDialog({ collection, onSuccess }: UploadPageProps) {
                   disabled={rows.length === 0 || uploading}
                 >
                   {uploading ? (
-                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Mengimpor...</>
+                    <><Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" /> Memproses...</>
                   ) : (
-                    <><Upload className="mr-2 h-4 w-4" /> Import {rows.length} Baris</>
+                    <><Upload className="mr-2 h-3.5 w-3.5" /> Impor ({rows.length})</>  
                   )}
                 </Button>
               </>
             ) : (
-              <Button onClick={handleClose}>Tutup</Button>
+              <Button onClick={handleClose} className="ml-auto">
+                Selesai
+              </Button>
             )}
           </DialogFooter>
         </DialogContent>
